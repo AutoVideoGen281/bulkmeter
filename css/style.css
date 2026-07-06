@@ -613,8 +613,7 @@ html, body {
 }
 
 .ex-card input,
-.superset-exercise input {
-  width: 120px;
+.ss-row input {
   text-align: center;
   background: var(--bg-elevated);
   border: 2px solid var(--border);
@@ -627,28 +626,54 @@ html, body {
   outline: none;
   transition: border-color 0.2s;
 }
+.ex-card > input { width: 120px; }
 .ex-card input:focus,
-.superset-exercise input:focus { border-color: var(--accent); }
+.ss-row input:focus { border-color: var(--accent); }
 .ex-card input::placeholder,
-.superset-exercise input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 1rem; }
+.ss-row input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 1rem; }
 
-.superset-group {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.mark-btn {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  padding: 14px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #020617;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-.superset-exercise {
+.mark-btn:hover { background: #16A34A; }
+.mark-btn:active { transform: scale(0.98); }
+
+.ss-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  margin-bottom: 4px;
+}
+.ss-row:last-of-type { margin-bottom: 0; }
+.ss-label { flex: 1; }
+.ss-row input {
+  width: 80px;
   text-align: center;
 }
 .ex-label {
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 1.1rem;
-  margin-bottom: 2px;
+  font-size: 1rem;
+  line-height: 1.2;
 }
-.superset-exercise .ex-stats {
-  margin-bottom: 12px;
+.ss-label .ex-stats {
+  margin: 0;
+  font-size: 0.75rem;
 }
+.ss-row .ex-stats { margin-bottom: 0; }
 
 /* --- Workout Progress --- */
 .workout-progress {

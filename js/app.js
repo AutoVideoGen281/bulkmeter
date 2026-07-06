@@ -329,20 +329,23 @@ function renderExercise() {
 
   if (ex.superset) {
     area.innerHTML = `
-      <div class="superset-group">
+      <div class="ex-card">
         <div class="ex-header">${ex.name}</div>
         <div class="ex-meta">Superset ${woState.setIdx + 1}/${ex.sets}</div>
         ${ex.superset.map((s, i) => {
           const max = Storage.getMaxRep(s.id);
           const target = Storage.getTarget(s.id);
           return `
-            <div class="superset-exercise">
-              <div class="ex-label">${s.name}</div>
-              ${max > 0 ? `<div class="ex-stats">Max ${max} &middot; Target ${target}</div>` : ''}
-              <input type="number" min="0" inputmode="numeric" class="superset-rep-input" data-id="${s.id}" placeholder="reps" autocomplete="off">
+            <div class="ss-row">
+              <div class="ss-label">
+                <div class="ex-label">${s.name}</div>
+                ${max > 0 ? `<div class="ex-stats">Max ${max} &middot; Target ${target}</div>` : ''}
+              </div>
+              <input type="number" min="0" inputmode="numeric" class="superset-rep-input" data-id="${s.id}" placeholder="0" autocomplete="off">
             </div>
           `;
         }).join('')}
+        <button class="mark-btn" id="superset-mark-btn">Mark Complete</button>
       </div>
     `;
     const inputs = area.querySelectorAll('.superset-rep-input');
@@ -358,6 +361,7 @@ function renderExercise() {
         }
       });
     });
+    document.getElementById('superset-mark-btn').addEventListener('click', onSupersetComplete);
     setTimeout(() => inputs[0].focus(), 100);
   } else {
     const max = Storage.getMaxRep(ex.id);
@@ -367,13 +371,15 @@ function renderExercise() {
         <div class="ex-header">${ex.name}</div>
         <div class="ex-meta">Set ${woState.setIdx + 1}/${ex.sets}</div>
         ${max > 0 ? `<div class="ex-stats">Max ${max} &middot; Target ${target}</div>` : ''}
-        <input type="number" min="0" inputmode="numeric" id="single-rep-input" placeholder="reps" autocomplete="off">
+        <input type="number" min="0" inputmode="numeric" id="single-rep-input" placeholder="0" autocomplete="off">
+        <button class="mark-btn" id="mark-btn">Mark Complete</button>
       </div>
     `;
     const inp = document.getElementById('single-rep-input');
     inp.addEventListener('keydown', e => {
       if (e.key === 'Enter') onSetComplete();
     });
+    document.getElementById('mark-btn').addEventListener('click', onSetComplete);
     setTimeout(() => inp.focus(), 100);
   }
   updateProgress();
