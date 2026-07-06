@@ -1,4 +1,4 @@
-const CACHE = 'bulkmeter-v3';
+const CACHE = 'bulkmeter-v4';
 
 self.addEventListener('install', e => {
   e.waitUntil(
