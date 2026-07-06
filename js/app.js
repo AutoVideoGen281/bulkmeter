@@ -178,7 +178,6 @@ function showRestOverlay(remaining, total) {
   const nextEl = document.getElementById('rest-next');
 
   overlay.style.display = 'flex';
-  document.getElementById('exercise-area').style.display = 'none';
   const circ = 2 * Math.PI * 52;
   ring.style.strokeDasharray = circ;
   ring.style.strokeDashoffset = circ;
@@ -211,7 +210,6 @@ function updateRestOverlay(remaining, total) {
 
 function hideRestOverlay() {
   document.getElementById('rest-overlay').style.display = 'none';
-  document.getElementById('exercise-area').style.display = 'flex';
   document.querySelector('.rest-card').classList.remove('timer-end-pulse');
 }
 
