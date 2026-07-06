@@ -2,7 +2,7 @@
   "name": "Bulkmeter",
   "short_name": "Bulkmeter",
   "description": "Track your bulk from 70kg to 75kg",
-  "start_url": "/",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#020617",
   "theme_color": "#020617",
