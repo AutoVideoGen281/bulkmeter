@@ -131,11 +131,11 @@ const Storage = {
 
 let timerState = null; // { interval, remaining, total, onEnd, type }
 
-function startTimer(seconds, onEnd, type) {
+function startTimer(seconds, onEnd) {
   stopTimer();
   const total = seconds;
   let remaining = seconds;
-  showRestOverlay(remaining, total, type);
+  showRestOverlay(remaining, total);
 
   timerState = {
     interval: setInterval(() => {
@@ -171,11 +171,10 @@ function getTimerRemaining() { return timerState ? timerState.remaining : 0; }
 
 // ===================== REST OVERLAY UI =====================
 
-function showRestOverlay(remaining, total, type) {
+function showRestOverlay(remaining, total) {
   const overlay = document.getElementById('rest-overlay');
   const ring = document.getElementById('timer-ring');
   const timeEl = document.getElementById('rest-time');
-  const labelEl = document.getElementById('rest-label');
   const nextEl = document.getElementById('rest-next');
 
   overlay.style.display = 'flex';
@@ -183,7 +182,6 @@ function showRestOverlay(remaining, total, type) {
   ring.style.strokeDasharray = circ;
   ring.style.strokeDashoffset = circ;
   timeEl.textContent = formatTime(remaining);
-  labelEl.textContent = type === 'set' ? 'Rest between sets' : 'Rest between exercises';
 
   const info = getNextInfo();
   nextEl.textContent = info ? info.label : '';
@@ -393,9 +391,8 @@ function onSetComplete() {
   if (isLastSetOfWorkout()) { finishWorkout(); return; }
 
   const restSec = isLastSetOfExercise() ? (ex ? ex.restEx : 180) : (ex ? ex.restSet : 120);
-  const type = isLastSetOfExercise() ? 'ex' : 'set';
   advanceWorkout();
-  startTimer(restSec, () => renderExercise(), type);
+  startTimer(restSec, () => renderExercise());
 }
 
 function onSupersetComplete() {
@@ -415,9 +412,8 @@ function onSupersetComplete() {
   if (isLastSetOfWorkout()) { finishWorkout(); return; }
 
   const restSec = isLastSetOfExercise() ? ex.restEx : ex.restSet;
-  const type = isLastSetOfExercise() ? 'ex' : 'set';
   advanceWorkout();
-  startTimer(restSec, () => renderExercise(), type);
+  startTimer(restSec, () => renderExercise());
 }
 
 function updateProgress() {
