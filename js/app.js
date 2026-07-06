@@ -813,9 +813,13 @@ document.addEventListener('DOMContentLoaded', () => {
     Storage._set('tasksCollapsed', closed);
   });
 
-  // Service worker registration
+  // Service worker registration (force fresh)
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.getRegistrations().then(regs => {
+      regs.forEach(r => r.unregister());
+    }).then(() => {
+      navigator.serviceWorker.register('sw.js');
+    }).catch(() => {});
   }
 
   // Initial render
