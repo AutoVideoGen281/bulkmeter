@@ -185,10 +185,9 @@ function showRestOverlay(remaining, total, type) {
   timeEl.textContent = formatTime(remaining);
   labelEl.textContent = type === 'set' ? 'Rest between sets' : 'Rest between exercises';
 
-  const next = getNextExerciseName();
-  nextEl.textContent = next ? 'Next: ' + next : '';
+  const info = getNextInfo();
+  nextEl.textContent = info ? info.label : '';
 
-  // Animate initial
   requestAnimationFrame(() => {
     const offset = circ * (1 - remaining / total);
     ring.style.strokeDashoffset = circ - offset;
@@ -261,19 +260,31 @@ function getCurrentExercise() {
   return w.exercises[woState.exIdx] || null;
 }
 
-function getNextExerciseName() {
+function getNextInfo() {
   if (!woState || woState.done) return null;
   const w = getWorkoutDef(woState.type);
   let exIdx = woState.exIdx;
   let setIdx = woState.setIdx + 1;
   const ex = w.exercises[exIdx];
   if (!ex) return null;
-  if (setIdx >= ex.sets) {
+
+  const isNewEx = setIdx >= ex.sets;
+  if (isNewEx) {
     exIdx++;
     setIdx = 0;
   }
+
   const nextEx = w.exercises[exIdx];
-  return nextEx ? nextEx.name : null;
+  if (!nextEx) return null;
+
+  if (isNewEx) {
+    return { name: nextEx.name, label: 'Next: ' + nextEx.name };
+  }
+
+  return {
+    name: ex.name,
+    label: 'Next: ' + ex.name + ' Set ' + (setIdx + 1) + '/' + ex.sets
+  };
 }
 
 function isLastSetOfExercise() {
@@ -321,56 +332,50 @@ function renderExercise() {
   if (ex.superset) {
     area.innerHTML = `
       <div class="superset-group">
-        <div class="exercise-name">${ex.name}</div>
-        <div class="exercise-set">Superset ${woState.setIdx + 1}/${ex.sets}</div>
-        ${ex.superset.map(s => {
+        <div class="ex-header">${ex.name}</div>
+        <div class="ex-meta">Superset ${woState.setIdx + 1}/${ex.sets}</div>
+        ${ex.superset.map((s, i) => {
           const max = Storage.getMaxRep(s.id);
           const target = Storage.getTarget(s.id);
           return `
             <div class="superset-exercise">
-              <div class="exercise-name" style="font-size:1.25rem">${s.name}</div>
-              <div class="exercise-max-target">
-                ${max > 0 ? `<span>Max <span class="value">${max}</span></span>` : ''}
-                ${target > 0 ? `<span>Target <span class="value">${target}</span></span>` : ''}
-              </div>
-              <div class="reps-input-wrap">
-                <input type="number" min="0" inputmode="numeric" class="superset-rep-input" data-id="${s.id}" placeholder="0">
-                <span class="reps-label">reps</span>
-              </div>
+              <div class="ex-label">${s.name}</div>
+              ${max > 0 ? `<div class="ex-stats">Max ${max} &middot; Target ${target}</div>` : ''}
+              <input type="number" min="0" inputmode="numeric" class="superset-rep-input" data-id="${s.id}" placeholder="reps" autocomplete="off">
             </div>
           `;
         }).join('')}
-        <button class="complete-set-btn superset-complete-btn" id="complete-superset-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Mark Complete
-        </button>
       </div>
     `;
-    document.getElementById('complete-superset-btn').addEventListener('click', onSupersetComplete);
+    const inputs = area.querySelectorAll('.superset-rep-input');
+    inputs.forEach((inp, i) => {
+      inp.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (i < inputs.length - 1) {
+            inputs[i + 1].focus();
+          } else {
+            onSupersetComplete();
+          }
+        }
+      });
+    });
+    setTimeout(() => inputs[0].focus(), 100);
   } else {
     const max = Storage.getMaxRep(ex.id);
     const target = Storage.getTarget(ex.id);
     area.innerHTML = `
-      <div class="exercise-card">
-        <div class="exercise-name">${ex.name}</div>
-        <div class="exercise-set">Set ${woState.setIdx + 1}/${ex.sets}</div>
-        <div class="exercise-max-target">
-          ${max > 0 ? `<span>Max <span class="value">${max}</span></span>` : ''}
-          ${target > 0 ? `<span>Target <span class="value">${target}</span></span>` : ''}
-        </div>
-        <div class="reps-input-wrap">
-          <input type="number" min="0" inputmode="numeric" id="single-rep-input" placeholder="0">
-          <span class="reps-label">reps</span>
-        </div>
-        <button class="complete-set-btn" id="complete-set-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Mark Complete
-        </button>
+      <div class="ex-card">
+        <div class="ex-header">${ex.name}</div>
+        <div class="ex-meta">Set ${woState.setIdx + 1}/${ex.sets}</div>
+        ${max > 0 ? `<div class="ex-stats">Max ${max} &middot; Target ${target}</div>` : ''}
+        <input type="number" min="0" inputmode="numeric" id="single-rep-input" placeholder="reps" autocomplete="off">
       </div>
     `;
-    document.getElementById('complete-set-btn').addEventListener('click', onSetComplete);
     const inp = document.getElementById('single-rep-input');
-    inp.addEventListener('keydown', e => { if (e.key === 'Enter') onSetComplete(); });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') onSetComplete();
+    });
     setTimeout(() => inp.focus(), 100);
   }
   updateProgress();

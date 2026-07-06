@@ -594,73 +594,33 @@ html, body {
   justify-content: center;
   padding: 24px 20px;
 }
-.exercise-card {
+.ex-card, .superset-group {
   width: 100%;
-  max-width: 380px;
+  max-width: 360px;
   text-align: center;
 }
-.exercise-name {
+.ex-header {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 1.75rem;
-  margin-bottom: 4px;
+  font-size: 1.6rem;
+  margin-bottom: 2px;
 }
-.exercise-set {
+.ex-meta {
   font-family: var(--font-heading);
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--text-secondary);
-  margin-bottom: 12px;
+  margin-bottom: 4px;
 }
-.exercise-max-target {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 24px;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-.exercise-max-target span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.exercise-max-target .value {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 1rem;
+.ex-stats {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
 }
 
-/* Superset layout */
-.superset-group {
-  width: 100%;
-  max-width: 380px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.superset-exercise {
-  text-align: center;
-}
-.superset-exercise .exercise-name {
-  font-size: 1.25rem;
-  margin-bottom: 8px;
-}
-.superset-exercise .reps-input-wrap {
-  max-width: 200px;
-  margin: 0 auto;
-}
-
-.reps-input-wrap {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  justify-content: center;
-  margin-bottom: 8px;
-}
-.reps-input-wrap input {
-  width: 100px;
+.ex-card input,
+.superset-exercise input {
+  width: 120px;
   text-align: center;
   background: var(--bg-elevated);
   border: 2px solid var(--border);
@@ -668,47 +628,32 @@ html, body {
   color: var(--text-primary);
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 1.75rem;
-  padding: 12px 8px;
+  font-size: 2rem;
+  padding: 14px 8px;
   outline: none;
   transition: border-color 0.2s;
 }
-.reps-input-wrap input:focus { border-color: var(--accent); }
-.reps-input-wrap input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 1rem; }
-.reps-label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
+.ex-card input:focus,
+.superset-exercise input:focus { border-color: var(--accent); }
+.ex-card input::placeholder,
+.superset-exercise input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 1rem; }
 
-.complete-set-btn {
+.superset-group {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  max-width: 280px;
-  margin: 16px auto 0;
-  padding: 16px;
-  background: var(--accent);
-  border: none;
-  border-radius: var(--radius-sm);
-  color: #020617;
+  flex-direction: column;
+  gap: 20px;
+}
+.superset-exercise {
+  text-align: center;
+}
+.ex-label {
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s;
+  font-size: 1.1rem;
+  margin-bottom: 2px;
 }
-.complete-set-btn:hover { background: #16A34A; }
-.complete-set-btn:active { transform: scale(0.97); }
-.complete-set-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.superset-complete-btn {
-  max-width: 320px;
+.superset-exercise .ex-stats {
+  margin-bottom: 12px;
 }
 
 /* --- Workout Progress --- */
