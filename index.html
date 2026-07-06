@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Bulkmeter</title>
+  <meta name="description" content="Track your bulk from 70kg to 75kg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#020617">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ============ DASHBOARD ============ -->
+    <main id="screen-dashboard" class="screen active">
+      <header class="app-header">
+        <div class="header-row">
+          <h1 class="logo">BULKMETER</h1>
+          <div class="streak-badge" id="streak-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+            <span id="streak-count">0</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- Weight Card -->
+        <section class="card weight-card" id="weight-card">
+          <div class="weight-display">
+            <span class="weight-value" id="current-weight">—</span>
+            <span class="weight-unit">kg</span>
+          </div>
+          <div class="weight-meta">
+            <span>Target: 75 kg</span>
+            <span id="weight-diff">+5 kg to go</span>
+          </div>
+          <div class="progress-track weight-track">
+            <div class="progress-fill" id="weight-progress" style="width:0%"></div>
+          </div>
+        </section>
+
+        <!-- Weight Chart -->
+        <section class="card chart-card" id="chart-card">
+          <div class="card-header-row">
+            <h2 class="card-title">Weight</h2>
+            <button class="btn-icon" id="add-weight-btn" aria-label="Log weight">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="weight-chart" height="160"></canvas>
+          </div>
+        </section>
+
+        <!-- Tasks Card -->
+        <section class="card tasks-card" id="tasks-card">
+          <div class="card-header-row" id="tasks-toggle" style="cursor:pointer">
+            <h2 class="card-title">
+              <svg class="collapse-chevron" id="tasks-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              Today
+            </h2>
+            <span class="task-summary" id="task-summary"></span>
+          </div>
+
+          <div class="tasks-collapsible" id="tasks-collapsible">
+            <div class="day-selector" id="day-selector">
+              <button class="day-opt" data-day="upper">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                Upper
+              </button>
+              <button class="day-opt" data-day="legs">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                Legs
+              </button>
+              <button class="day-opt" data-day="core">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                Core+Rest
+              </button>
+            </div>
+            <div class="task-list" id="task-list"></div>
+          </div>
+        </section>
+
+        <!-- Workout Buttons -->
+        <div class="workout-grid" id="workout-grid">
+          <button class="workout-btn" data-workout="upper">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+            <span class="workout-btn-label">Upper</span>
+            <span class="workout-btn-sets">18 sets</span>
+          </button>
+          <button class="workout-btn" data-workout="legs">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10a6 6 0 0 0-12 0v10"/><circle cx="12" cy="4" r="2"/></svg>
+            <span class="workout-btn-label">Legs</span>
+            <span class="workout-btn-sets">14 sets</span>
+          </button>
+          <button class="workout-btn" data-workout="core">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span class="workout-btn-label">Core</span>
+            <span class="workout-btn-sets">5 sets</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ============ WORKOUT SCREEN ============ -->
+    <main id="screen-workout" class="screen">
+      <div class="workout-header">
+        <button class="btn-back" id="workout-back" aria-label="Back">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <h2 class="workout-title" id="workout-title">Upper Body</h2>
+        <div class="workout-header-spacer"></div>
+      </div>
+
+      <!-- Rest Timer Overlay -->
+      <div class="rest-overlay" id="rest-overlay" style="display:none">
+        <div class="rest-card">
+          <div class="rest-timer">
+            <svg class="rest-ring-svg" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" class="ring-bg"/>
+              <circle cx="60" cy="60" r="52" class="ring-progress" id="timer-ring" 
+                      stroke-dasharray="326.73" stroke-dashoffset="0"/>
+            </svg>
+            <div class="rest-time" id="rest-time">2:00</div>
+          </div>
+          <div class="rest-label" id="rest-label">Rest</div>
+          <div class="rest-next" id="rest-next"></div>
+          <button class="skip-btn" id="skip-rest">Skip</button>
+        </div>
+      </div>
+
+      <!-- Exercise Area -->
+      <div class="exercise-area" id="exercise-area"></div>
+
+      <!-- Progress Bar -->
+      <div class="workout-progress">
+        <div class="progress-track">
+          <div class="progress-fill" id="wo-progress-fill" style="width:0%"></div>
+        </div>
+        <span class="wo-progress-text" id="wo-progress-text">0 / 0</span>
+      </div>
+    </main>
+
+    <!-- ============ WEIGHT MODAL ============ -->
+    <div class="modal-overlay" id="weight-modal" style="display:none">
+      <div class="modal">
+        <h3 class="modal-title">Log Weight</h3>
+        <div class="modal-body">
+          <div class="input-group">
+            <input type="number" step="0.1" id="weight-input" placeholder="70.0" autofocus>
+            <span class="input-suffix">kg</span>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="weight-cancel">Cancel</button>
+          <button class="btn-primary" id="weight-save">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ WORKOUT COMPLETE MODAL ============ -->
+    <div class="modal-overlay" id="complete-modal" style="display:none">
+      <div class="modal complete-modal">
+        <div class="complete-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3 class="modal-title">Workout Complete!</h3>
+        <p class="complete-sub" id="complete-sub">Great job today</p>
+        <button class="btn-primary" id="complete-done">Back to Dashboard</button>
+      </div>
+    </div>
+
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>
