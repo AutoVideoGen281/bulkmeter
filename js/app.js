@@ -161,10 +161,9 @@ function stopTimer() {
 }
 
 function skipTimer() {
-  const end = timerState && timerState.onEnd;
   stopTimer();
   playBeep();
-  end && end();
+  renderExercise();
 }
 
 function getTimerRemaining() { return timerState ? timerState.remaining : 0; }
